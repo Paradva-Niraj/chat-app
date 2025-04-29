@@ -2,6 +2,15 @@
     background-color: rgba(137, 175, 255, 0.575);
 }
 
+.background:hover,
+.background:focus{
+    border-color: rgb(0, 81, 255);
+}
+
 .background-button{
     background-color: #94dfffb3;
+}
+
+.background-button:hover{
+    border-color: #00b3ff;
 }
