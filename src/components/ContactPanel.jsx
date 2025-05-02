@@ -1,13 +1,18 @@
-import '../Style/Input.css'
+import '../Style/ContactPanel.css';
 
 function ContactPanel() {
-    return ( 
+    return (
         <>
-            <div className="h-screen-100 block md:hidden w-sm mt-4 ml-4 mb-4 rounded-xl background back border-2">
+            <div className="hidden lg:block h-screen-100 w-md mt-4 ml-4 mb-4 rounded-xl border-2 contact">
                 contact
             </div>
+            <div className="flex lg:hidden menu-box rounded-md">
+                <span className="line rounded-sm"></span>
+                <span className="line rounded-sm"></span>
+                <span className="line rounded-sm"></span>
+            </div>
         </>
-     );
+    );
 }
 
 export default ContactPanel;

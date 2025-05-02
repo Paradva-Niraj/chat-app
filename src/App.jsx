@@ -10,7 +10,7 @@ function App() {
 
   return (
     <>
-    <div className='flex min-h-screen min-w-screen bg-cover bg-center bg-no-repeat' style={{backgroundImage: "url('../../public/back-grond-3.jpg')" }}>
+    <div className='flex min-h-screen min-w-screen bg-cover bg-center bg-no-repeat' style={{backgroundImage: "url('../../public/back-grond-4.jpg')" }}>
       <ContactPanel />
       <div className="flex flex-1 items-end">
         <Input />
