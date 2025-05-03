@@ -74,8 +74,10 @@
     width: auto;
 }
 
-@media (min-width:1024px) {
-    .input-box{
 
+@media (max-width:1024px) {
+    .chats{
+        height: 80vh; 
+        flex: 0 0 auto;
     }
 }
