@@ -2,14 +2,38 @@ import '../Style/Input.css';
 
 function Input() {
     return (
-        <>
-            <div className="Input flex w-full m-4">
-                <input type="text" name="Messmage" className="focus:border-blue-500 flex-1 border rounded-lg p-2 font-bold text-2xl "  id="" placeholder='Message' />
-                <button className="w-1/6 border border-cyan-700 flex justify-center items-center rounded-lg ml-2 hover:bg-blue-50">
-                    <img src="send-light.png" className="h-6" alt="" srcset="" />
+        <div className="sidepannel">
+            <div className="chats">
+                <div class="recive-message message">Hi there!</div>
+                <div class="send-message message">Hello! How are you?</div>
+                <div class="recive-message message">I'm good, thanks!</div>
+                
+                <div class="recive-message message">Hi there!</div>
+                <div class="send-message message">Hello! How are you?</div>
+                <div class="recive-message message">I'm good, thanks!</div>
+                <div class="recive-message message">Hi there!</div>
+                <div class="send-message message">Hello! How are you?</div>
+                <div class="recive-message message">I'm good, thanks!</div>
+                <div class="recive-message message">Hi there!</div>
+                <div class="send-message message">Hello! How are you?</div>
+                <div class="recive-message message">I'm good, thanks!</div>
+                <div class="recive-message message">Hi there!</div>
+                <div class="send-message message">Hello! How are you?</div>
+                <div class="recive-message message">I'm good, thanks!</div>
+                <div class="recive-message message">Hi there!</div>
+                <div class="send-message message">Hello! How are you?</div>
+                <div class="recive-message message">I'm good, thanks!</div>
+                <div class="recive-message message">Hi there!</div>
+                <div class="send-message message">Hello! How are you?</div>
+                <div class="recive-message message">I'm good, thanks!</div>     
+            </div>
+            <div className="input-box">
+                <input type="text" name="Messmage" className="input" id="" placeholder='Message' />
+                <button className="send">
+                    <img src="send-light.png" className="send-image" alt="" srcset="" />
                 </button>
             </div>
-        </>
+        </div>
     );
 }
 

@@ -9,14 +9,10 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
-    <div className='flex min-h-screen min-w-screen bg-cover bg-center bg-no-repeat' style={{backgroundImage: "url('../../public/back-grond-4.jpg')" }}>
+    <div className='main'>
       <ContactPanel />
-      <div className="flex flex-1 items-end">
-        <Input />
-      </div>
+      <Input />
     </div>
-    </>
   )
 }
 

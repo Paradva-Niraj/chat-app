@@ -1,3 +1,81 @@
-.Input{
-    height: 50px;
+.sidepannel{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+    padding-top: 2vh;
+}
+
+.chats{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height:90vh;
+    width: 100%;
+    padding: 1vh;
+    font-size: larger;
+    background-color: aquamarine;
+    border-radius: 2vh;
+}
+.message {
+    max-width: 60%;
+    padding: 1vh;
+    margin: 1vh;
+    border-radius: 1vh;
+    font-size: large;
+    word-wrap: break-word;
+}
+
+.recive-message {
+    background-color: #ffffff;
+    align-self: flex-start;
+}
+
+.send-message {
+    background-color: #d1f5ff;
+    align-self: flex-end;
+}
+.input-box{
+    display: flex;
+    width: 100%;
+    height: 10vh;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    padding-left: 1vh;
+}
+
+.input{
+    height: 60%;
+    width: 80%;
+    background-color: azure;
+    border:1px solid rgb(131, 131, 131);
+    border-radius: 1vh;
+    padding-left: 1% ;
+    font-size: x-large;
+    align-items: center;
+}
+
+.send{
+    height: 60%;
+    width: 20%;
+    border: 1px solid rgb(131, 131, 131);
+    margin:0vh 1vh 0vh 1vh;
+    border-radius: 1vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+}
+
+.send-image{
+    height: 80%;
+    width: auto;
+}
+
+@media (min-width:1024px) {
+    .input-box{
+
+    }
 }

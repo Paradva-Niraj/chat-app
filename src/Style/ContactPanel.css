@@ -1,17 +1,23 @@
 .contact{
     border: 1px solid rgb(0, 0, 0);
-    padding:1%;
+    padding:0.5%;
+    margin: 1%;
+    border-radius: 1vh;
     font-size:x-large;
+    min-width: 25%;
 }
 
 .menu-box{
     display: flex;
+    position: fixed;
     flex-direction: column;
-    height: 40px;
-    width: 45px;
-    background-color: rgba(0, 255, 255, 0.571);
-    margin: 1vh;
+    background-color: rgba(0, 255, 255, 0);
+    margin: 1%;
+    height: 50px;
+    width: 50px;
     align-items: center;
+    border: 1px solid black;
+    border-radius: 5px;
     justify-content: space-around;
     transition: transform 0.3s ease; 
 }
@@ -21,14 +27,20 @@
 }
 
 .line{
-    height: 3px;
-    width: 40px;
+    height: 10%;
+    width: 80%;
     background-color: black;
     transition: trasnform 0.03s ease;
 }
 
 @media (min-width:1024px) {
     .menu-box{
+        display: none;
+    }
+}
+
+@media (max-width:1023px) {
+    .contact{
         display: none;
     }
 }
