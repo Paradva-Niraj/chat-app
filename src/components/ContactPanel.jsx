@@ -4,8 +4,13 @@ import { useNavigate } from 'react-router-dom';
 
 function ContactPanel() {
     const [showPopup, setShowPopup] = useState(false);
-    const [contacts, steConatcts] = useState(['Alice', 'Bob', 'Charlie', 'David', 'Ella']);
+    const [contacts, steConatcts] = useState(['Alice', 'Bob', 'Charlie', 'David', 'Ella', 'Alice', 'Bob', 'Charlie', 'David', 'Ella', 'Alice', 'Bob', 'Charlie', 'David', 'Ella', 'Alice', 'Bob', 'Charlie', 'David', 'Ella']);
     const [latest, setLatest] = useState(['Alice', 'Bob']);
+    const [morefeature, SetMorefeature] = useState(false);
+
+    const popFeature = () => {
+        SetMorefeature(!morefeature);
+    }
 
     const nav = useNavigate();
 
@@ -28,14 +33,16 @@ function ContactPanel() {
         <>
             <div className="contact">
                 <span>
-                {contacts.map((name, index) => (
-                    <div key={index} className="contact-item">
-                        {name}
-                    </div>
-                ))}
+                    <input type="text" name="phone" id="" className="search" placeholder='Search' />
+                    {contacts.map((name, index) => (
+                        <div key={index} className="contact-item">
+                            {name}
+                        </div>
+                    ))}
                 </span>
-                <span>
-                <button onClick={handleLogout} className='logout' style={{width:'100%'}}>Log Out</button>
+                <span className='feature'>
+                    <button onClick={handleLogout} className='logout' style={{ width: '49%' }}>Log Out</button>
+                    <button onClick={handleLogout} className='logout' style={{ width: '49%', background: 'rgb(94, 255, 190)' }}>Add New</button>
                 </span>
             </div>
             <div className='menu'>
@@ -44,19 +51,33 @@ function ContactPanel() {
                     <span className="line rounded-sm"></span>
                     <span className="line rounded-sm"></span>
                 </div>
-                <div>
-                    <button onClick={handleLogout} className='logout'>Log Out</button>
+                <div className='phone-search'>
+                    <input type="text" name="search" className='search' id="" placeholder='Search' />
+                </div>
+                <div className='more'>
+                    <span id="more-feature" onClick={popFeature}>
+                        <span className='dot'></span>
+                        <span className='dot'></span>
+                        <span className='dot'></span>
+                    </span>
+
+                    {morefeature && (
+                        <div className="popup-menu">
+                            <button onClick={handleLogout} className='logout' style={{ width: '100%' }}>Log Out</button>
+                            <button onClick={handleLogout} className='logout' style={{ width: '100%', background: 'rgb(94, 255, 190)' }}>Add New</button>
+                        </div>
+                    )}
                 </div>
             </div>
-                {showPopup && (
-                    <div className="popup">
-                        {contacts.map((name, index) => (
-                            <div key={index} className="contact-item">
-                                {name}
-                            </div>
-                        ))}
-                    </div>
-                )}
+            {showPopup && (
+                <div className="popup">
+                    {contacts.map((name, index) => (
+                        <div key={index} className="contact-item">
+                            {name}
+                        </div>
+                    ))}
+                </div>
+            )}
         </>
     );
 }
