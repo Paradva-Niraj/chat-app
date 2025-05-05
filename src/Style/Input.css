@@ -15,7 +15,7 @@
     width: 100%;
     padding: 1vh;
     font-size: larger;
-    background-color: aquamarine;
+    /* background-color: rgb(91, 144, 126); */
     border-radius: 2vh;
 }
 .message {
