@@ -6,7 +6,7 @@ import { useState } from 'react';
 function Login() {
 
     const [form, setForm] = useState({ phone: '', password: '' });
-    
+    const [user,setUser] = useState(null);
     const nav = useNavigate();
 
     const URL = import.meta.env.VITE_AUTH_URL;
@@ -21,7 +21,9 @@ function Login() {
             const res = await axios.post(`${URL}login`,form);
             // alert("Login Success");
             localStorage.setItem('token',res.data.token);
-            nav('/');
+            setUser(res.data.user);
+            // console.log(res.data.user);
+            nav('/', { state: { user: res.data.user } });
         }
         catch (err){
             alert(err.response?.data?.msg || "Login Failed")

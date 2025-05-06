@@ -1,21 +1,42 @@
 import { useState, useEffect } from 'react';
 import '../Style/ContactPanel.css';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
 
 function ContactPanel() {
     const [showPopup, setShowPopup] = useState(false);
-    const [contacts, steConatcts] = useState(['Alice', 'Bob', 'Charlie', 'David', 'Ella', 'Alice', 'Bob', 'Charlie', 'David', 'Ella', 'Alice', 'Bob', 'Charlie', 'David', 'Ella', 'Alice', 'Bob', 'Charlie', 'David', 'Ella']);
-    const [morefeature, SetMorefeature] = useState(false);
+    const [contacts, setContacts] = useState([]);
+    const [morefeature, setMorefeature] = useState(false);
     const [showSearchModal, setShowSearchModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [result, setresult] = useState([])
-    const [loading,setLoading] = useState(false); 
+    const [result, setResult] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [addingFriend, setAddingFriend] = useState(false);
+    
     const URL = import.meta.env.VITE_SEARCH_URL;
+    const friendurl = import.meta.env.VITE_FRIEND_URL;
+
+    const location = useLocation();
+    const user = location.state?.user;
+    const token = localStorage.getItem("token");
+
+    // Debug token
+    useEffect(() => {
+        if (token) {
+            try {
+                // Just log the first few characters for debugging
+                console.log('Token available:', token.substring(0, 15) + '...');
+            } catch (err) {
+                console.error('Token issue:', err);
+            }
+        } else {
+            console.warn('No token found in localStorage');
+        }
+    }, []);
 
     const popFeature = () => {
-        SetMorefeature(!morefeature);
+        setMorefeature(!morefeature);
     }
 
     const nav = useNavigate();
@@ -24,7 +45,6 @@ function ContactPanel() {
         localStorage.removeItem('token');
         nav('/login');
     }
-
 
     useEffect(() => {
         const handleResize = () => {
@@ -38,43 +58,119 @@ function ContactPanel() {
 
     useEffect(() => {
         const fetchUser = async () => {
-
-            if (searchQuery.trim().length > 0 && searchQuery.length == 10) {
+            if (searchQuery.trim().length > 0) {
                 try {
-                    setLoading(true)
-                    const users = await axios.get(`${URL}searchnew?phone=${searchQuery}`);
-                    setresult(users.data);
+                    setLoading(true);
+                    setError(null);
+                    const users = await axios.get(`${URL}searchnew?phone=${searchQuery}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        }
+                    });
+                    console.log('Search results:', users.data);
+                    setResult(users.data);
+                    setLoading(false);
                 }
                 catch (err) {
-                    // alert(err.response?.data?.msg || "no found");
-                    setresult([]);
+                    setResult([]);
                     setLoading(false);
+                    setError('Search failed: ' + (err.response?.data?.msg || err.message));
+                    console.error("Search error:", err.response?.data || err.message);
                 }
             }
             else {
-                setresult([]);
+                setResult([]);
                 setLoading(false);
             }
         }
-        fetchUser();
-    }, [searchQuery])
+        
+        if (searchQuery.length === 10) {
+            fetchUser();
+        }
+    }, [searchQuery, URL, token]);
+
+    // Friend list function
+    const fetchFriends = async () => {
+        try {
+            setError(null);
+            console.log('Fetching friends list...');
+            const response = await axios.get(`${friendurl}list`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            console.log('Friends list response:', response.data);
+            setContacts(response.data);
+        }
+        catch (err) {
+            setError('Failed to load contacts: ' + (err.response?.data?.msg || err.message));
+            console.error("Error fetching friends:", err.response?.data || err);
+        }
+    }
+
+    useEffect(() => {
+        if (token) {
+            fetchFriends();
+        }
+    }, [token]);
+
+    const addFriend = async (friendPhone) => {
+        try {
+            setAddingFriend(true);
+            setError(null);
+            console.log('Adding friend with phone:', friendPhone);
+            
+            const response = await axios.post(
+                `${friendurl}add`, 
+                { friendPhone }, 
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            
+            console.log('Add friend response:', response.data);
+            setAddingFriend(false);
+            fetchFriends();
+            setShowSearchModal(false); // Close modal after successful add
+        } catch (err) {
+            setAddingFriend(false);
+            const errorMsg = err.response?.data?.msg || err.message || 'Unknown error';
+            setError('Failed to add contact: ' + errorMsg);
+            console.error("Error adding friend:", errorMsg);
+            
+            // Log additional error details for debugging
+            if (err.response) {
+                console.error("Error status:", err.response.status);
+                console.error("Error details:", err.response.data);
+            }
+        }
+    };
 
     return (
         <>
             <div className="contact">
                 <span className='contact-list'>
                     <input type="text" name="phone" id="" className="search" placeholder='Search' />
-                    {contacts.map((name, index) => (
-                        <div key={index} className="contact-item">
-                            {name}
-                        </div>
-                    ))}
+                    {error && <div className="error-message">{error}</div>}
+                    {contacts.length > 0 ? (
+                        contacts.map((contact, index) => (
+                            <div key={index} className="contact-item">
+                                {contact.name || contact.phone}
+                            </div>
+                        ))
+                    ) : (
+                        <div className="no-contacts">No contacts found</div>
+                    )}
                 </span>
                 <span className='feature'>
                     <button onClick={handleLogout} className='logout' style={{ width: '49%' }}>Log Out</button>
-                    <button onClick={() => { setShowSearchModal(!showSearchModal) }} className='logout' style={{ width: '49%', background: 'rgb(94, 255, 190)' }}>Add New</button>
+                    <button onClick={() => { setShowSearchModal(!showSearchModal); setError(null); }} className='logout' style={{ width: '49%', background: 'rgb(94, 255, 190)' }}>Add New</button>
                 </span>
             </div>
+            
             <div className='menu'>
                 <div className="menu-box" onClick={() => setShowPopup(!showPopup)}>
                     <span className="line rounded-sm"></span>
@@ -94,20 +190,22 @@ function ContactPanel() {
                     {morefeature && (
                         <div className="popup-menu">
                             <button onClick={handleLogout} className='logout' style={{ width: '100%' }}>Log Out</button>
-                            <button onClick={() => { setShowSearchModal(!showSearchModal) }} className='logout' style={{ width: '100%', background: 'rgb(94, 255, 190)' }}>Add New</button>
+                            <button onClick={() => { setShowSearchModal(!showSearchModal); setError(null); }} className='logout' style={{ width: '100%', background: 'rgb(94, 255, 190)' }}>Add New</button>
                         </div>
                     )}
                 </div>
             </div>
+            
             {showPopup && (
                 <div className="popup">
-                    {contacts.map((name, index) => (
+                    {contacts.map((contact, index) => (
                         <div key={index} className="contact-item">
-                            {name}
+                            {contact.name || contact.phone}
                         </div>
                     ))}
                 </div>
             )}
+            
             {showSearchModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -119,24 +217,33 @@ function ContactPanel() {
                             value={searchQuery}
                             onChange={(e) => { setSearchQuery(e.target.value) }}
                         />
+                        
+                        {error && <div className="error-message">{error}</div>}
+                        
                         <div className="search-results">
                             {result.length > 0 ? (
                                 result.map((user, idx) => (
                                     <div key={idx} className="contact-item">
                                         <div className="name-box">
                                             <div className="name">
-                                                {user.name}                                               
+                                                {user.name}
                                             </div>
                                             <div className="name-contact">
                                                 {user.phone}
                                             </div>
+                                            <div 
+                                                className="add-btn" 
+                                                onClick={() => addFriend(user.phone)}
+                                                style={{ cursor: addingFriend ? 'not-allowed' : 'pointer' }}
+                                            >
+                                                {addingFriend ? '...' : '+'}
+                                            </div>
                                         </div>
                                     </div>
                                 ))
-                            ) : (loading ? 
-                                searchQuery.length === 10 && <div className='loader'>
-                                    
-                                </div>:<div>No Data Found</div>
+                            ) : (loading ?
+                                searchQuery.length === 10 && <div className='loader'></div> 
+                                : <div>No Data Found</div>
                             )}
                         </div>
                     </div>

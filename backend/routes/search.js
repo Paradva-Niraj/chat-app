@@ -1,8 +1,9 @@
 const express = require('express')
-const User = require('../models/User');
+const User = require('../models/user');
+const auth = require('../middeleware/auth')
 const router = express.Router();
 
-router.get('/searchnew',async(req,res)=>{
+router.get('/searchnew',auth,async(req,res)=>{
     const {phone} = req.query;
     try{
         const data = await User.find({phone}).select('-password');

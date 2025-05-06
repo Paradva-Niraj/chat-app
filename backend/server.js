@@ -10,6 +10,7 @@ require('dotenv').config();
 //routers 
 const authRoutes = require('./routes/auth');
 const searchRoutes = require('./routes/search');
+const friendRoute = require('./routes/friends');
 
 app.use(cors());
 
@@ -17,6 +18,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/search',searchRoutes);
+app.use('/api/friends',friendRoute);
 
 const server = http.createServer(app);
 
