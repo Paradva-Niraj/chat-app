@@ -9,6 +9,8 @@ function Login() {
     
     const nav = useNavigate();
 
+    const URL = import.meta.env.VITE_AUTH_URL;
+
     const handleChange = e => {
         setForm({...form,[e.target.name]:e.target.value})
     }
@@ -16,7 +18,7 @@ function Login() {
     const handleSubmit = async e => {
         e.preventDefault();
         try{
-            const res = await axios.post('http://localhost:3000/api/auth/login',form);
+            const res = await axios.post(`${URL}login`,form);
             // alert("Login Success");
             localStorage.setItem('token',res.data.token);
             nav('/');

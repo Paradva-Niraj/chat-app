@@ -6,13 +6,17 @@ const {Server} = require('socket.io');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+
+//routers 
 const authRoutes = require('./routes/auth');
+const searchRoutes = require('./routes/search');
 
 app.use(cors());
 
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/search',searchRoutes);
 
 const server = http.createServer(app);
 
