@@ -20,6 +20,7 @@ function ContactPanel({onSelectFrd}) {
 
     const location = useLocation();
     const user = location.state?.user;
+    // console.log('user data',user.phone);
     const token = localStorage.getItem("token");
 
     // Debug token
@@ -122,6 +123,7 @@ function ContactPanel({onSelectFrd}) {
         }
     }, [token]);
 
+    // add friend function 
     const addFriend = async (friendPhone) => {
         try {
             setAddingFriend(true);

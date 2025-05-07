@@ -6,11 +6,11 @@ const router = express.Router();
 
 // Route to add a friend - with extensive debugging
 router.post('/add', auth, async (req, res) => {
-    const { friendPhone } = req.body;
+    const { friendPhone,userphone } = req.body;
     
     try {
         // Validate input
-        if (!friendPhone) {
+        if (!friendPhone && !userphone) {
             return res.status(400).json({ msg: 'Friend phone number is required' });
         }
         
@@ -37,18 +37,23 @@ router.post('/add', auth, async (req, res) => {
         
         // Find or create friend list
         let friendList = await Friend.findOne({ user: userId }); 
-        
-        if (!friendList) { 
+        let frdfrdList = await Friend.findOne({ user: friend._id})
+
+        if (!friendList && !frdfrdList) { 
             friendList = new Friend({
                 user: userId,
                 friends: [friend._id]
+            });
+            frdfrdList = new Friend({
+                user:friend._id,
+                friends:[userId]
             });
         } else {
             // Check for duplicate (convert ObjectIds to strings for comparison)
             const friendIdStr = friend._id.toString();
             const isDuplicate = friendList.friends.some(id => id.toString() === friendIdStr);
              
-            
+            console.log("error at frd adding");
             if (isDuplicate) {
                 return res.status(400).json({ msg: 'Friend already added' });
             }
@@ -57,6 +62,7 @@ router.post('/add', auth, async (req, res) => {
         }
          
         await friendList.save(); 
+        await frdfrdList.save();
         res.json({ msg: 'Friend added successfully' });
     } catch (err) { 
         res.status(500).json({ msg: 'Server error', error: err.message });

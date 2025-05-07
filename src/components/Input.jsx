@@ -6,7 +6,7 @@ function Input({ selectFrd }) {
     const [message, setMessage] = useState('');
     const [chat, setChat] = useState([]);
     const chatBoxRef = useRef();
-    console.log(selectFrd);
+    // console.log(selectFrd);
     
 
     function parseJwt(token) {
