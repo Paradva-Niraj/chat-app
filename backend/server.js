@@ -22,7 +22,7 @@ app.use('/api/friends',friendRoute);
 
 const server = http.createServer(app);
 
-
+const users = {}; 
 // old msg sahre to brod cast code 
 const io = new Server(server,{
   cors:{
@@ -31,11 +31,56 @@ const io = new Server(server,{
   },
 });
 
-io.on("connection",(socket)=>{
-  socket.on("chat_message",(data)=>{
-    io.emit("chat_message",{...data,from:socket.id})
-  })
-})
+io.on('connection', (socket) => {
+  // console.log(`New connection: ${socket.id}`);
+  
+  // Register user ID with socket ID
+  socket.on('register', (userId) => {
+    // console.log(`User ${userId} registered with socket ${socket.id}`);
+    users[userId] = socket.id;
+  });
+
+  // Handle private messages
+  socket.on('private_message', ({ to, from, text }) => {
+    // console.log(`Private message from ${from} to ${to}: ${text}`);
+    
+    // Get the recipient's socket ID
+    const targetSocketId = users[to];
+    
+    if (targetSocketId) {
+      // Send the message to the recipient
+      io.to(targetSocketId).emit('private_message', { from, to, text });
+      // console.log(`Message sent to socket ${targetSocketId}`);
+    } else {
+      console.log(`User ${to} is not connected or not found`);
+      // Optionally, send a notification back to the sender
+      socket.emit('message_status', { 
+        messageId: Date.now(), 
+        status: 'pending',
+        error: 'Recipient not online'
+      });
+    }
+  });
+
+  // Handle disconnections
+  socket.on('disconnect', () => {
+    // console.log(`Socket disconnected: ${socket.id}`);
+    // Remove user from the users object
+    for (const userId in users) {
+      if (users[userId] === socket.id) {
+        // console.log(`User ${userId} disconnected`);
+        delete users[userId];
+        break;
+      }
+    }
+  });
+});
+
+// io.on("connection",(socket)=>{
+//   socket.on("chat_message",(data)=>{
+//     io.emit("chat_message",{...data,from:socket.id})
+//   })
+// })
 // end of brod cast
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -52,5 +97,4 @@ const PORT = process.env.PORT || 3000;
 
 server.listen(PORT,()=>{
   console.log("server");
-  
 })

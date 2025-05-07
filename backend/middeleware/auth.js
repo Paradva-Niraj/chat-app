@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user'); // Make sure path is correct
 
 const auth = async (req, res, next) => {
-  console.log('Auth middleware triggered');
+  // console.log('Auth middleware triggered');
   
   // Get token from header
   const authHeader = req.header('Authorization');

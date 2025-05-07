@@ -3,7 +3,7 @@ import '../Style/ContactPanel.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function ContactPanel() {
+function ContactPanel({onSelectFrd}) {
     const [showPopup, setShowPopup] = useState(false);
     const [contacts, setContacts] = useState([]);
     const [morefeature, setMorefeature] = useState(false);
@@ -13,7 +13,8 @@ function ContactPanel() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [addingFriend, setAddingFriend] = useState(false);
-    
+    const [searchContactvalue,setSearchContactValue] = useState('');
+    const [filter,setFilter] = useState(null);
     const URL = import.meta.env.VITE_SEARCH_URL;
     const friendurl = import.meta.env.VITE_FRIEND_URL;
 
@@ -41,11 +42,15 @@ function ContactPanel() {
 
     const nav = useNavigate();
 
+
+    // logout 
     const handleLogout = () => {
         localStorage.removeItem('token');
         nav('/login');
     }
 
+
+    // responsive contact hide and dsplay
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth >= 1024 && showPopup) {
@@ -56,6 +61,8 @@ function ContactPanel() {
         return () => window.removeEventListener('resize', handleResize);
     }, [showPopup]);
 
+
+    // ftech users for display - friend list
     useEffect(() => {
         const fetchUser = async () => {
             if (searchQuery.trim().length > 0) {
@@ -67,7 +74,7 @@ function ContactPanel() {
                             Authorization: `Bearer ${token}`,
                         }
                     });
-                    console.log('Search results:', users.data);
+                    // console.log('Search results:', users.data);
                     setResult(users.data);
                     setLoading(false);
                 }
@@ -89,7 +96,8 @@ function ContactPanel() {
         }
     }, [searchQuery, URL, token]);
 
-    // Friend list function
+
+    // Friend list function - fetching fron server
     const fetchFriends = async () => {
         try {
             setError(null);
@@ -99,7 +107,7 @@ function ContactPanel() {
                     Authorization: `Bearer ${token}`
                 }
             });
-            console.log('Friends list response:', response.data);
+            // console.log('Friends list response:', response.data);
             setContacts(response.data);
         }
         catch (err) {
@@ -118,7 +126,7 @@ function ContactPanel() {
         try {
             setAddingFriend(true);
             setError(null);
-            console.log('Adding friend with phone:', friendPhone);
+            // console.log('Adding friend with phone:', friendPhone);
             
             const response = await axios.post(
                 `${friendurl}add`, 
@@ -131,16 +139,16 @@ function ContactPanel() {
                 }
             );
             
-            console.log('Add friend response:', response.data);
+            // console.log('Add friend response:', response.data);
             setAddingFriend(false);
             fetchFriends();
-            setShowSearchModal(false); // Close modal after successful add
+            setShowSearchModal(false); 
         } catch (err) {
             setAddingFriend(false);
             const errorMsg = err.response?.data?.msg || err.message || 'Unknown error';
             setError('Failed to add contact: ' + errorMsg);
-            console.error("Error adding friend:", errorMsg);
-            
+            // console.error("Error adding friend:", errorMsg) ;
+            alert(errorMsg);
             // Log additional error details for debugging
             if (err.response) {
                 console.error("Error status:", err.response.status);
@@ -149,21 +157,43 @@ function ContactPanel() {
         }
     };
 
+    // search from already added frd
+    useEffect(() => {
+        if (searchContactvalue.trim().length > 0) {
+            const filtered = contacts.filter(contact =>
+                contact.name?.toLowerCase().includes(searchContactvalue.toLowerCase()) ||
+                contact.phone?.includes(searchContactvalue)
+            );
+            setFilter(filtered);
+        } else {
+            setFilter(contacts);
+        }
+        if(searchContactvalue.length > 0 && window.innerWidth < 1024 ){
+            setShowPopup(true);
+        }
+        else{
+            setShowPopup(false);
+        }
+    }, [searchContactvalue, contacts]);
+
+
+    //
+
     return (
         <>
             <div className="contact">
                 <span className='contact-list'>
-                    <input type="text" name="phone" id="" className="search" placeholder='Search' />
-                    {error && <div className="error-message">{error}</div>}
+                    <input type="text" name="phone" value={searchContactvalue} id="" onChange={(e)=>setSearchContactValue(e.target.value)} className="search" placeholder='Search' />  
                     {contacts.length > 0 ? (
-                        contacts.map((contact, index) => (
-                            <div key={index} className="contact-item">
+                        filter.map((contact, index) => (
+                            <div key={index} className="contact-item" onClick={()=>onSelectFrd(contact)}>
                                 {contact.name || contact.phone}
                             </div>
                         ))
                     ) : (
                         <div className="no-contacts">No contacts found</div>
                     )}
+                    {/* {console.log("con-"+JSON.stringify(contacts))} */}
                 </span>
                 <span className='feature'>
                     <button onClick={handleLogout} className='logout' style={{ width: '49%' }}>Log Out</button>
@@ -178,7 +208,7 @@ function ContactPanel() {
                     <span className="line rounded-sm"></span>
                 </div>
                 <div className='phone-search'>
-                    <input type="text" name="search" className='search' id="" placeholder='Search' />
+                    <input type="text" name="search" value={searchContactvalue} onChange={(e)=>setSearchContactValue(e.target.value)} className='search' id="" placeholder='Search' />
                 </div>
                 <div className='more'>
                     <span id="more-feature" onClick={popFeature}>
@@ -198,8 +228,10 @@ function ContactPanel() {
             
             {showPopup && (
                 <div className="popup">
-                    {contacts.map((contact, index) => (
-                        <div key={index} className="contact-item">
+                    {filter.map((contact, index) => (
+                        <div key={index} className="contact-item" onClick={()=>{onSelectFrd(contact);
+                            setShowPopup(false);
+                        }}>
                             {contact.name || contact.phone}
                         </div>
                     ))}
@@ -218,7 +250,6 @@ function ContactPanel() {
                             onChange={(e) => { setSearchQuery(e.target.value) }}
                         />
                         
-                        {error && <div className="error-message">{error}</div>}
                         
                         <div className="search-results">
                             {result.length > 0 ? (

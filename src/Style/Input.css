@@ -18,6 +18,17 @@
     /* background-color: rgb(91, 144, 126); */
     border-radius: 2vh;
 }
+.chat{
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height:80vh;
+    width: 100%;
+    padding: 1vh;
+    font-size: larger;
+    /* background-color: rgb(91, 144, 126); */
+    border-radius: 2vh;
+}
 .message {
     max-width: 60%;
     padding: 1vh;
@@ -74,6 +85,15 @@
     width: auto;
 }
 
+.chatName{
+    background-color: rgba(0, 0, 0, 0.078);
+    height: 6%;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    padding-left: 2%;
+}
 
 @media (max-width:1024px) {
     .chats{
