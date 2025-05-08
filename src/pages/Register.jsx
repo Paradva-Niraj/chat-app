@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 function Register() {
     
     const [form,setForm] = useState({phone:'',password:'',name:'',dob:''})
+    const [otpState,setOtpState] = useState(false);
 
     const nav = useNavigate();
 
@@ -24,9 +25,18 @@ function Register() {
         }
     }
     
+    const handleOTP = (e) =>{
+            e.preventDefault();
+            console.log("otp");
+            setOtpState(true);
+    }
+
     return (<>
+   
         <form className="auth-form" onSubmit={handleSubmit}>
-            <h2>Register</h2>
+            {!otpState && (
+            <>
+            <h2>REGISTER</h2>
             <input
                 name="name"
                 placeholder="Full Name"
@@ -56,8 +66,17 @@ function Register() {
                 placeholder="Password"
                 onChange={handleChange}
                 required
-            />
-            <button type="submit">Register</button>
+                /> 
+        
+            <button onClick={handleOTP}>Send OTP</button>
+            </>)
+            }
+            { otpState &&
+            <div className="">
+                <h2>Authentication</h2>
+                <button type="submit">Register</button>
+            </div>
+            }
             <p>Already have an account? <Link to="/login">Login here</Link></p>
         </form>
     </>

@@ -34,7 +34,7 @@ function Login() {
     return (
         <>
             <form className="auth-form" onSubmit={handleSubmit}>
-                <h2>Login</h2>
+                <h2>LOGIN</h2>
                 <input name="phone" type='tel' maxLength="10" pattern="\d{10}" placeholder="Phone" onChange={handleChange} required />
                 <input name="password" placeholder="Password" type="password" onChange={handleChange} required />
                 <button type="submit">Login</button>
