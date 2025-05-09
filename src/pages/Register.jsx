@@ -1,12 +1,12 @@
 import axios from "axios";
-import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom"; // Make sure capitalization is correct
 import OtpVerification from "../components/otpVerification";
 
 function Register() {
-
-    const [form, setForm] = useState({ phone: '', password: '', name: '', dob: '' })
+    const [form, setForm] = useState({ phone: '', password: '', name: '', dob: '' });
     const [otpState, setOtpState] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const nav = useNavigate();
 
@@ -14,17 +14,21 @@ function Register() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
         try {
+            setIsLoading(true);
             const res = await axios.post(`${import.meta.env.VITE_AUTH_URL}register`, form);
-            // alert(res.data.msg);
-            nav('/login')
+            alert(res.data.msg || "Registration successful!");
+            nav('/login');
         }
         catch (err) {
             alert(err.response?.data?.msg || "Register Error");
         }
-    }
+        finally {
+            setIsLoading(false);
+        }
+    };
+
     const handleOTP = (e) => {
         e.preventDefault();
 
@@ -35,61 +39,63 @@ function Register() {
             return;
         }
 
-        const phoneRegex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
+        // Validate phone number format
+        const phoneRegex = /^\+[0-9]{1,3}[0-9]{6,14}$/;
         if (!phoneRegex.test(phone)) {
-            alert("Please enter a valid international phone number (e.g., +91 9876543210)");
+            alert("Please enter a valid international phone number (e.g., +911234567890)");
             return;
         }
 
-        // console.log("Form data:", form);
+        console.log("Sending OTP to:", phone);
         setOtpState(true);
     };
 
-    return (<>
+    return (
+        <div className="register-container">
+            {!otpState ? (
+                <div className="auth-form">
+                    <h2>REGISTER</h2>
+                    <input
+                        name="name"
+                        placeholder="Full Name"
+                        value={form.name}
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        name="dob"
+                        type="date"
+                        placeholder="Date of Birth"
+                        value={form.dob}
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        name="phone"
+                        type="tel"
+                        placeholder="Phone Number (e.g., +911234567890)"
+                        value={form.phone}
+                        onChange={handleChange}
+                        required
+                    />
+                    <input
+                        name="password"
+                        type="password"
+                        placeholder="Password"
+                        value={form.password}
+                        onChange={handleChange}
+                        required
+                    />
 
-        {!otpState &&
-            <div className="auth-form">
-                <h2>REGISTER</h2>
-                <input
-                    name="name"
-                    placeholder="Full Name"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    name="dob"
-                    type="date"
-                    placeholder="Date of Birth"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    name="phone"
-                    type="tel"
-                    pattern="/^\+(?:[0-9] ?){6,14}[0-9]$/"
-                    placeholder="Phone"
-                    title="Enter a 10-digit phone number"
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    name="password"
-                    type="password"
-                    placeholder="Password"
-                    onChange={handleChange}
-                    required
-                />
-
-                <button onClick={handleOTP}>Send OTP</button>
-                <p>Already have an account? <Link to="/login">Login here</Link></p>
-            </div>
-        }
-        <div>
-            {otpState &&
+                    <button onClick={handleOTP} disabled={isLoading}>
+                        {isLoading ? "Processing..." : "Send OTP"}
+                    </button>
+                    <p>Already have an account? <Link to="/login">Login here</Link></p>
+                </div>
+            ) : (
                 <OtpVerification phone={form.phone} handleSubmit={handleSubmit} />
-            }
+            )}
         </div>
-    </>
     );
 }
 

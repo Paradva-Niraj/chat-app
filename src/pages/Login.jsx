@@ -23,7 +23,7 @@ function Login() {
             localStorage.setItem('token',res.data.token);
             setUser(res.data.user);
             // console.log(res.data.user);
-            nav('/', { state: { user: res.data.user } });
+            nav("/", { state: { user: res.data.user } });
         }
         catch (err){
             alert(err.response?.data?.msg || "Login Failed")

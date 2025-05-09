@@ -1,51 +1,84 @@
-.otp{
-     background: rgba(255, 255, 255, 0.401);
-  padding: 2rem;
-  border-radius: 12px;
-  width: 500px;
+/* src/Style/otp.css */
+.otp {
   max-width: 400px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.6s ease-in-out;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
-
 
 .otp h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.otp h3 {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+.otp-input-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.otpInput {
+  width: 40px;
+  height: 50px;
+  font-size: 24px;
   text-align: center;
-  margin-bottom: 1.5rem;
-  color: #205bfc;
-  font-size: larger;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
 }
 
-.auth-form button {
-  width: 100%;
-  padding: 0.75rem;
-  background: #ffffffc2;
-  color: #ffbb00;
-  font-size: 1rem;
+.otpInput:focus {
+  border-color: #4285f4;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+}
+
+#recaptcha-container {
+  margin: 20px 0;
+  min-height: 60px;
+}
+
+.verify-btn, .resend-btn {
+  padding: 10px 20px;
+  margin: 10px 5px;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s;
+  font-weight: bold;
+  transition: all 0.3s ease;
 }
 
-.auth-form button:hover {
-  background: #0e3a94;
+.verify-btn {
+  background-color: #4285f4;
   color: white;
 }
 
-.otpInput{
-    width: 40px;
-    height: 40px;
-    margin: 3px;
-    text-align: center;
-    font-size: 1.2em;
-    background-color: white;
-    border-radius: 5px;
+.verify-btn:hover {
+  background-color: #3367d6;
 }
 
-@media (max-width: 403px) {
-  .otp{
-    width: 100%;
-  }
+.resend-btn {
+  background-color: #f1f3f4;
+  color: #4285f4;
+}
+
+.resend-btn:hover {
+  background-color: #e8eaed;
+}
+
+/* Disable button styles */
+button:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
 }
