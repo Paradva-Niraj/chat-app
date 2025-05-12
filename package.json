@@ -18,6 +18,7 @@
     "react-router-dom": "^7.5.3",
     "socket.io-client": "^4.8.1",
     "tailwindcss": "^4.1.4",
+    "twilio": "^5.6.0",
     "ws": "^8.18.2"
   },
   "devDependencies": {
