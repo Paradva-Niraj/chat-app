@@ -3,7 +3,7 @@ import '../Style/ContactPanel.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function ContactPanel({onSelectFrd}) {
+function ContactPanel({ onSelectFrd }) {
     const [showPopup, setShowPopup] = useState(false);
     const [contacts, setContacts] = useState([]);
     const [morefeature, setMorefeature] = useState(false);
@@ -13,8 +13,8 @@ function ContactPanel({onSelectFrd}) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [addingFriend, setAddingFriend] = useState(false);
-    const [searchContactvalue,setSearchContactValue] = useState('');
-    const [filter,setFilter] = useState(null);
+    const [searchContactvalue, setSearchContactValue] = useState('');
+    const [filter, setFilter] = useState(null);
     const URL = import.meta.env.VITE_SEARCH_URL;
     const friendurl = import.meta.env.VITE_FRIEND_URL;
 
@@ -70,29 +70,33 @@ function ContactPanel({onSelectFrd}) {
                 try {
                     setLoading(true);
                     setError(null);
-                    const users = await axios.get(`${URL}searchnew?phone=${searchQuery}`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
+
+                    // Make a POST request to the backend with phone in the request body
+                    const users = await axios.post(
+                        `${URL}searchnew`,
+                        { phone: searchQuery },  // Send the phone number in the request body
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,  // Pass the token for authorization
+                            },
                         }
-                    });
-                    // console.log('Search results:', users.data);
-                    setResult(users.data);
+                    );
+                    console.log('Search results:', users.data);
+                    setResult([users.data]);  // Store the result in state
                     setLoading(false);
-                }
-                catch (err) {
+                } catch (err) {
                     setResult([]);
                     setLoading(false);
                     setError('Search failed: ' + (err.response?.data?.msg || err.message));
                     console.error("Search error:", err.response?.data || err.message);
                 }
-            }
-            else {
+            } else {
                 setResult([]);
                 setLoading(false);
             }
         }
-        
-        if (searchQuery.length === 10) {
+
+        if (searchQuery.length >= 10) {
             fetchUser();
         }
     }, [searchQuery, URL, token]);
@@ -129,10 +133,10 @@ function ContactPanel({onSelectFrd}) {
             setAddingFriend(true);
             setError(null);
             // console.log('Adding friend with phone:', friendPhone);
-            
+
             const response = await axios.post(
-                `${friendurl}add`, 
-                { friendPhone }, 
+                `${friendurl}add`,
+                { friendPhone },
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -140,11 +144,11 @@ function ContactPanel({onSelectFrd}) {
                     }
                 }
             );
-            
+
             // console.log('Add friend response:', response.data);
             setAddingFriend(false);
             fetchFriends();
-            setShowSearchModal(false); 
+            setShowSearchModal(false);
         } catch (err) {
             setAddingFriend(false);
             const errorMsg = err.response?.data?.msg || err.message || 'Unknown error';
@@ -159,7 +163,7 @@ function ContactPanel({onSelectFrd}) {
         }
     };
 
-    // search from already added frd
+    // search from already added frd contact component right side
     useEffect(() => {
         if (searchContactvalue.trim().length > 0) {
             const filtered = contacts.filter(contact =>
@@ -170,10 +174,10 @@ function ContactPanel({onSelectFrd}) {
         } else {
             setFilter(contacts);
         }
-        if(searchContactvalue.length > 0 && window.innerWidth < 1024 ){
+        if (searchContactvalue.length > 0 && window.innerWidth < 1024) {
             setShowPopup(true);
         }
-        else{
+        else {
             setShowPopup(false);
         }
     }, [searchContactvalue, contacts]);
@@ -185,10 +189,10 @@ function ContactPanel({onSelectFrd}) {
         <>
             <div className="contact">
                 <span className='contact-list'>
-                    <input type="text" name="phone" value={searchContactvalue} id="" onChange={(e)=>setSearchContactValue(e.target.value)} className="search" placeholder='Search' />  
+                    <input type="text" name="phone" value={searchContactvalue} id="" onChange={(e) => setSearchContactValue(e.target.value)} className="search" placeholder='Search' />
                     {contacts.length > 0 ? (
                         filter.map((contact, index) => (
-                            <div key={index} className="contact-item" onClick={()=>onSelectFrd(contact)}>
+                            <div key={index} className="contact-item" onClick={() => onSelectFrd(contact)}>
                                 {contact.name || contact.phone}
                             </div>
                         ))
@@ -202,7 +206,7 @@ function ContactPanel({onSelectFrd}) {
                     <button onClick={() => { setShowSearchModal(!showSearchModal); setError(null); }} className='logout' style={{ width: '49%', background: 'rgb(94, 255, 190)' }}>Add New</button>
                 </span>
             </div>
-            
+
             <div className='menu'>
                 <div className="menu-box" onClick={() => setShowPopup(!showPopup)}>
                     <span className="line rounded-sm"></span>
@@ -210,7 +214,7 @@ function ContactPanel({onSelectFrd}) {
                     <span className="line rounded-sm"></span>
                 </div>
                 <div className='phone-search'>
-                    <input type="text" name="search" value={searchContactvalue} onChange={(e)=>setSearchContactValue(e.target.value)} className='search' id="" placeholder='Search' />
+                    <input type="text" name="search" value={searchContactvalue} onChange={(e) => setSearchContactValue(e.target.value)} className='search' id="" placeholder='Search' />
                 </div>
                 <div className='more'>
                     <span id="more-feature" onClick={popFeature}>
@@ -227,11 +231,12 @@ function ContactPanel({onSelectFrd}) {
                     )}
                 </div>
             </div>
-            
+
             {showPopup && (
                 <div className="popup">
                     {filter.map((contact, index) => (
-                        <div key={index} className="contact-item" onClick={()=>{onSelectFrd(contact);
+                        <div key={index} className="contact-item" onClick={() => {
+                            onSelectFrd(contact);
                             setShowPopup(false);
                         }}>
                             {contact.name || contact.phone}
@@ -239,7 +244,7 @@ function ContactPanel({onSelectFrd}) {
                     ))}
                 </div>
             )}
-            
+
             {showSearchModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -251,21 +256,19 @@ function ContactPanel({onSelectFrd}) {
                             value={searchQuery}
                             onChange={(e) => { setSearchQuery(e.target.value) }}
                         />
-                        
-                        
+
+
                         <div className="search-results">
-                            {result.length > 0 ? (
+                            {loading ? (
+                                <div className='loader'></div>
+                            ) : result.length > 0 ? (
                                 result.map((user, idx) => (
                                     <div key={idx} className="contact-item">
                                         <div className="name-box">
-                                            <div className="name">
-                                                {user.name}
-                                            </div>
-                                            <div className="name-contact">
-                                                {user.phone}
-                                            </div>
-                                            <div 
-                                                className="add-btn" 
+                                            <div className="name">{user.name}</div>
+                                            <div className="name-contact">{user.phone}</div>
+                                            <div
+                                                className="add-btn"
                                                 onClick={() => addFriend(user.phone)}
                                                 style={{ cursor: addingFriend ? 'not-allowed' : 'pointer' }}
                                             >
@@ -274,10 +277,10 @@ function ContactPanel({onSelectFrd}) {
                                         </div>
                                     </div>
                                 ))
-                            ) : (loading ?
-                                searchQuery.length === 10 && <div className='loader'></div> 
-                                : <div>No Data Found</div>
+                            ) : (
+                                <div>No Data Found</div>
                             )}
+
                         </div>
                     </div>
                 </div>

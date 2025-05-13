@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Make sure capitalization is correct
 import OtpVerification from "../components/otpVerification";
-
+    
 function Register() {
     const [form, setForm] = useState({ phone: '', password: '', name: '', dob: '' });
     const [otpState, setOtpState] = useState(false);
@@ -11,7 +11,7 @@ function Register() {
     const nav = useNavigate();
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        setForm({ ...form, [e.target.name]: e.target.value.trim() });
     };
 
     const handleSubmit = async () => {
@@ -87,8 +87,18 @@ function Register() {
                         required
                     />
 
-                    <button onClick={handleOTP} disabled={isLoading}>
+
+
+{/* //comment because not get free sms otp service */}
+
+
+
+
+                    {/* <button onClick={handleOTP} disabled={isLoading}>
                         {isLoading ? "Processing..." : "Send OTP"}
+                    </button> */}
+                    <button onClick={handleSubmit} >
+                        Register
                     </button>
                     <p>Already have an account? <Link to="/login">Login here</Link></p>
                 </div>

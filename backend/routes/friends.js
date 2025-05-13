@@ -7,6 +7,7 @@ const router = express.Router();
 // Route to add a friend - with extensive debugging
 router.post('/add', auth, async (req, res) => {
     const { friendPhone,userphone } = req.body;
+    console.log(friendPhone,userphone);
     
     try {
         // Validate input

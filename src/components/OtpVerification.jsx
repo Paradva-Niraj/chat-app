@@ -1,25 +1,43 @@
 import { useEffect, useRef, useState } from "react";
 import "../Style/otp.css";
+import axios from "axios";
 
 function OtpVerification({ phone, handleSubmit }) {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const inputRefs = useRef([]);
-  const [loading, setIsLoading] = useState(false);
+  const [loading, setIsLoading] = useState(true);
+  const [reloading, setReLoading] = useState(true);
 
   useEffect(() => {
-
     inputRefs.current[0].focus();
-
-    const accountSid = import.meta.env.VITE_TWILIO_ID;
-    const authToken = import.meta.env.VITE_TWILIO_AUTH;
-
-    const client = require('twilio')(accountSid, authToken);
-
-    client.verify.v2.services("VA3108c5f2c4e8dc6094189ba9d3c702d5")
-      .verifications
-      .create({ to: {phone}, channel: 'sms' })
-      .then(verification => console.log(verification.sid));
+    sendOTP(phone);
   }, [])
+
+  const sendOTP = async (phone) =>{
+    setIsLoading(true);
+    setReLoading(true);
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_AUTH_URL}sendOTP`,{phone});
+      if(res.data.success){
+        alert("Verification OTP Send Successfully");
+        setReLoading(false);
+      }
+    } catch (error) {
+        console.log(error);
+    }
+  }
+
+  const handleVerifyOtp = async () => {
+    try {
+      const code = otp.join("");
+      const res = await axios.post(`${import.meta.env.VITE_AUTH_URL}confirmOTP`,{phone,code});
+      if(res.data.status === "approved"){
+        handleSubmit();
+      }
+    } catch (error) {
+    console.log(error);
+    }
+  }
 
   const handleChange = (index, e) => {
     const input = e.target.value;
@@ -31,7 +49,7 @@ function OtpVerification({ phone, handleSubmit }) {
 
     let currentIndex = index;
     digits.forEach((digit) => {
-      if (currentIndex < 6) {
+      if (currentIndex < 6 && currentIndex != 6) {
         updatedOtp[currentIndex] = digit;
         currentIndex++;
       }
@@ -41,8 +59,11 @@ function OtpVerification({ phone, handleSubmit }) {
 
     if (currentIndex < 6) {
       inputRefs.current[currentIndex]?.focus();
-    } else {
-      inputRefs.current[5]?.blur(); // optional: remove focus
+    }
+    if(updatedOtp.join("").length == 6){
+      setTimeout(()=>{
+        setIsLoading(false);
+      },3000)
     }
   };
 
@@ -50,7 +71,7 @@ function OtpVerification({ phone, handleSubmit }) {
   const handleKeyDown = (index, e) => {
     if (e.key === "Backspace") {
       const updatedOtp = [...otp];
-      if (otp[index]) {
+      if (otp[index] && index < 6) {
         updatedOtp[index] = "";
         setOtp(updatedOtp);
       } else if (index > 0) {
@@ -80,7 +101,7 @@ function OtpVerification({ phone, handleSubmit }) {
       </div>
       <div className="button-group">
         <button
-          // onClick={handleVerifyOtp}
+          onClick={handleVerifyOtp}
           className="verify-btn"
           disabled={loading || otp.join("").length !== 6}
         >
@@ -88,11 +109,11 @@ function OtpVerification({ phone, handleSubmit }) {
         </button>
 
         <button
-          // onClick={resendOtp}
+          onClick={()=>{sendOTP(phone)}}
           className="resend-btn"
           disabled={loading}
         >
-          {loading ? "Processing..." : "Resend OTP"}
+          {reloading ? "Processing..." : "Resend OTP"}
         </button>
       </div>
     </div>
