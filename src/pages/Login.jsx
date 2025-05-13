@@ -21,6 +21,7 @@ function Login() {
             const res = await axios.post(`${URL}login`, form);
             // alert("Login Success");
             localStorage.setItem('token', res.data.token);
+            localStorage.setItem('userPhone', res.data.user.phone); 
             setUser(res.data.user);
             // console.log(res.data.user);
             nav("/", { state: { user: res.data.user } });

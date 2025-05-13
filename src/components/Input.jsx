@@ -40,9 +40,9 @@ function Input({ selectFrd }) {
 
     // Listen for private messages
     useEffect(() => {
-        console.log("Setting up private message listener");
+        // console.log("Setting up private message listener");
         socket.on('private_message', (data) => {
-            console.log('Received private message:', data);
+            // console.log('Received private message:', data);
             setChat(prev => [...prev, data]);
         });
         
@@ -82,7 +82,7 @@ function Input({ selectFrd }) {
             };
             
             socket.emit('private_message', msgData);
-            console.log("Message emitted:", msgData);
+            // console.log("Message emitted:", msgData);
             
             setChat(prev => [...prev, msgData]);
             setMessage('');

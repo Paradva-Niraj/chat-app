@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 
 // Create a single socket instance with error handling
 const socketURL = import.meta.env.VITE_PORT || 'http://localhost:3000';
-console.log("Connecting to socket server at:", socketURL);
+// console.log("Connecting to socket server at:", socketURL);
 
 const socket = io(socketURL, {
   reconnection: true,
@@ -13,7 +13,7 @@ const socket = io(socketURL, {
 
 // Add event listeners for debugging
 socket.on('connect', () => {
-  console.log('Socket connected successfully with ID:', socket.id);
+  // console.log('Socket connected successfully with ID:', socket.id);
 });
 
 socket.on('connect_error', (err) => {
@@ -21,7 +21,7 @@ socket.on('connect_error', (err) => {
 });
 
 socket.on('disconnect', (reason) => {
-  console.log('Socket disconnected:', reason);
+  // console.log('Socket disconnected:', reason);
 });
 
 export default socket;

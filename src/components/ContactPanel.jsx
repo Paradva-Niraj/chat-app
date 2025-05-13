@@ -18,11 +18,11 @@ function ContactPanel({ onSelectFrd }) {
     const URL = import.meta.env.VITE_SEARCH_URL;
     const friendurl = import.meta.env.VITE_FRIEND_URL;
 
-    const location = useLocation();
-    const user = location.state?.user;
-    // console.log('user data',user.phone);
     const token = localStorage.getItem("token");
-
+    const location = useLocation();
+    const cphone = location.state?.user?.phone || localStorage.getItem('userPhone');
+    // console.log(cphone);
+    
     // Debug token
     useEffect(() => {
         if (token) {
@@ -81,7 +81,7 @@ function ContactPanel({ onSelectFrd }) {
                             },
                         }
                     );
-                    console.log('Search results:', users.data);
+                    // console.log('Search results:', users.data);
                     setResult([users.data]);  // Store the result in state
                     setLoading(false);
                 } catch (err) {
@@ -129,6 +129,7 @@ function ContactPanel({ onSelectFrd }) {
 
     // add friend function 
     const addFriend = async (friendPhone) => {
+
         try {
             setAddingFriend(true);
             setError(null);
@@ -136,7 +137,7 @@ function ContactPanel({ onSelectFrd }) {
 
             const response = await axios.post(
                 `${friendurl}add`,
-                { friendPhone },
+                { friendPhone, userphone: cphone },
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
