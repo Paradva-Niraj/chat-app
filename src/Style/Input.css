@@ -71,7 +71,7 @@
 .send{
     height: 60%;
     width: 20%;
-    border: 1px solid rgb(131, 131, 131);
+    border: 1px solid rgba(131, 131, 131, 0.714);
     margin:0vh 1vh 0vh 1vh;
     border-radius: 1vh;
     display: flex;
