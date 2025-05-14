@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Make sure capitalization is correct
-import OtpVerification from "../components/otpVerification";
+import OtpVerification from "../components/OtpVerification";
     
 function Register() {
     const [form, setForm] = useState({ phone: '', password: '', name: '', dob: '' });
