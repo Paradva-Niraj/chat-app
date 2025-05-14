@@ -22,9 +22,6 @@ In a world where every message leaves a footprint, **Dust** empowers you to spea
 - 💬 **Real-Time Messaging**  
   Instant communication with your friends, just like any modern chat app.
 
-- 🌍 **No Sign Up Needed**  
-  Start chatting with just a phone number — no personal info required.
-
 - 🧠 **Lightweight & Fast**  
   Built for speed, performance, and minimalism.
 
