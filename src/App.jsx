@@ -22,6 +22,13 @@ function App() {
           </div>) : <Navigate to='/login' />
           }
         />
+        <Route path='/chat' element={isAuthenticated ?
+          (<div className='main'>
+            <ContactPanel onSelectFrd={setSelectedFriend} />
+            <Input selectFrd={selectedFriend} />
+          </div>) : <Navigate to='/login' />
+          }
+        />
       </Routes>
     </Router>
   )

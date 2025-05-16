@@ -24,7 +24,7 @@ function Login() {
             localStorage.setItem('userPhone', res.data.user.phone); 
             setUser(res.data.user);
             // console.log(res.data.user);
-            nav("/", { state: { user: res.data.user } });
+            nav("/chat", { state: { user: res.data.user } });
         }
         catch (err) {
             alert(err.response?.data?.msg || "Login Failed")
