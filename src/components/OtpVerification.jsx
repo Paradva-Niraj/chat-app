@@ -13,31 +13,65 @@ function OtpVerification({ phone, handleSubmit }) {
     sendOTP(phone);
   }, [])
 
-  const sendOTP = async (phone) =>{
-    setIsLoading(true);
-    setReLoading(true);
-    try {
-      const res = await axios.post(`${import.meta.env.VITE_AUTH_URL}sendOTP`,{phone});
-      if(res.data.success){
-        alert("Verification OTP Send Successfully");
-        setReLoading(false);
-      }
-    } catch (error) {
-        console.log(error);
-    }
-  }
 
-  const handleVerifyOtp = async () => {
-    try {
-      const code = otp.join("");
-      const res = await axios.post(`${import.meta.env.VITE_AUTH_URL}confirmOTP`,{phone,code});
-      if(res.data.status === "approved"){
-        handleSubmit();
-      }
-    } catch (error) {
-    console.log(error);
-    }
-  }
+
+  // twilio otp code
+
+  // const sendOTP = async (phone) =>{
+  //   setIsLoading(true);
+  //   setReLoading(true);
+  //   try {
+  //     const res = await axios.post(`${import.meta.env.VITE_AUTH_URL}sendOTP`,{phone});
+  //     if(res.data.success){
+  //       alert("Verification OTP Send Successfully");
+  //       setReLoading(false);
+  //     }
+  //   } catch (error) {
+  //       console.log(error);
+  //   }
+  // }
+
+  // const handleVerifyOtp = async () => {
+  //   try {
+  //     const code = otp.join("");
+  //     const res = await axios.post(`${import.meta.env.VITE_AUTH_URL}confirmOTP`,{phone,code});
+  //     if(res.data.status === "approved"){
+  //       handleSubmit();
+  //     }
+  //   } catch (error) {
+  //   console.log(error);
+  //   }
+  // }
+
+
+  //firebase phone auth code
+  // const sendOTP = async (phone) => {
+  //   setIsLoading(true);
+  //   setReLoading(true);
+  //   try {
+  //     // Firebase already sent OTP in Register.js
+  //     alert("OTP has been sent via Firebase");
+  //     setReLoading(false);
+  //   } catch (error) {
+  //     console.error("Error sending OTP:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // const handleVerifyOtp = async () => {
+  //   const code = otp.join("");
+  //   try {
+  //     const result = await window.confirmationResult.confirm(code);
+  //     const user = result.user;
+  //     console.log("Firebase phone auth successful", user);
+  //     handleSubmit(); // Continue to register user in your DB
+  //   } catch (error) {
+  //     console.error("OTP verification failed", error);
+  //     alert("Invalid OTP. Please try again.");
+  //   }
+  // };
+
 
   const handleChange = (index, e) => {
     const input = e.target.value;
@@ -60,10 +94,10 @@ function OtpVerification({ phone, handleSubmit }) {
     if (currentIndex < 6) {
       inputRefs.current[currentIndex]?.focus();
     }
-    if(updatedOtp.join("").length == 6){
-      setTimeout(()=>{
+    if (updatedOtp.join("").length == 6) {
+      setTimeout(() => {
         setIsLoading(false);
-      },3000)
+      }, 3000)
     }
   };
 
@@ -109,7 +143,7 @@ function OtpVerification({ phone, handleSubmit }) {
         </button>
 
         <button
-          onClick={()=>{sendOTP(phone)}}
+          onClick={() => { sendOTP(phone) }}
           className="resend-btn"
           disabled={loading}
         >

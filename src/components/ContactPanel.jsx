@@ -96,7 +96,7 @@ function ContactPanel({ onSelectFrd }) {
             }
         }
 
-        if (searchQuery.length >= 10) {
+        if (searchQuery.length == 13) {
             fetchUser();
         }
     }, [searchQuery, URL, token]);
@@ -255,6 +255,7 @@ function ContactPanel({ onSelectFrd }) {
                             className="search"
                             placeholder="Search by phone number"
                             value={searchQuery}
+                            maxLength={13}
                             onChange={(e) => { setSearchQuery(e.target.value) }}
                         />
 
