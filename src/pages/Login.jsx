@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useState } from 'react';
 
-function Login() {
+function Login({setIsAuthenticated }) {
 
     const [form, setForm] = useState({ phone: '', password: '' });
     const [user, setUser] = useState(null);
@@ -23,8 +23,9 @@ function Login() {
             localStorage.setItem('token', res.data.token);
             localStorage.setItem('userPhone', res.data.user.phone); 
             setUser(res.data.user);
-            // console.log(res.data.user);
+            setIsAuthenticated(true);
             nav("/chat", { state: { user: res.data.user } });
+            // console.log(res.data.user);
         }
         catch (err) {
             alert(err.response?.data?.msg || "Login Failed")

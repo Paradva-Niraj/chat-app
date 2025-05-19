@@ -8,13 +8,13 @@ import Login from './pages/Login'
 
 function App() {
   const [selectedFriend, setSelectedFriend] = useState(null);
-  const isAuthenticated = !!localStorage.getItem("token");
+ const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
 
   return (
     <Router>
       <Routes>
         <Route path='/register' element={<Register />} />
-        <Route path='/login' element={<Login />} />
+        <Route path='/login' element={<Login setIsAuthenticated={setIsAuthenticated}/>} />
         <Route path='/' element={isAuthenticated ?
           (<div className='main'>
             <ContactPanel onSelectFrd={setSelectedFriend} />
