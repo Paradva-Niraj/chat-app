@@ -60,6 +60,7 @@ function Register() {
                     phone: `${userData.user_country_code}${userData.user_phone_number}`,
                     password: form.password || "defaultPassword123"
                 };
+                console.log("inside")
 
                 const response = await axios.post(`${import.meta.env.VITE_AUTH_URL}register`, payload);
                 alert(response.data.msg || "Registration successful!");
@@ -86,8 +87,9 @@ function Register() {
 
     const triggerPhoneEmailAuth = () => {
         // This triggers the Phone.Email sign-in flow via their widget
-        setIsPhoneAuthTriggered(true);
+        setIsPhoneAuthTriggered((prev) => (!prev));
     };
+
 //this not need useeffect handle this also this is use in firebase and twilio
     const handleSubmit = async () => {
         const trimmedForm = {
