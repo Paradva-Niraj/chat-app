@@ -11,3 +11,8 @@
         flex-direction: column;
     }
 }
+@media (max-width:720px) {
+    .main{
+        height: 100%;
+    }
+}

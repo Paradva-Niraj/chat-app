@@ -1,10 +1,11 @@
-.sidepannel{
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100%;
-    padding-top: 2vh;
+.sidepannel {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* can be overridden in media query */
+  width: 100%;
+  padding-top: 2vh;
 }
+
 
 .chats{
     flex: 1;
@@ -60,7 +61,7 @@
 .input{
     height: 60%;
     width: 80%;
-    background-color: azure;
+    background-color: transparent;
     border:1px solid rgb(131, 131, 131);
     border-radius: 1vh;
     padding-left: 1% ;
@@ -96,8 +97,50 @@
 }
 
 @media (max-width:1024px) {
-    .chats{
-        height: 80vh; 
-        flex: 0 0 auto;
-    }
+ .sidepannel {
+    height: 85vh; /* or dynamic if you change it */
+    display: flex;
+    flex-direction: column;
+    /* background-color: aqua; */
+  }
+
+  .chats {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1vh;
+  }
+
+  .chat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .input-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border-top: 1px solid #ccc;
+    /* background-color: white; */
+  }
+
+  .input {
+    flex: 1;
+    margin-right: 0.5rem;
+    font-size: 1rem;
+    padding: 0.5rem 0.8rem;
+  }
+
+  .send {
+    width: 3rem;
+    height: 3rem;
+    padding: 0.4rem;
+    border-radius: 0.5rem;
+  }
+
+  .send-image {
+    width: 100%;
+    height: auto;
+  }
 }

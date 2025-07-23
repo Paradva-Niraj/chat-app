@@ -89,6 +89,7 @@
 .menu {
     display: flex;
     /* flex-direction: column; */
+    /* margin-top: 3vh; */
     align-items: center;
     justify-content: space-between;
 }
@@ -283,3 +284,4 @@
         width: 100%;
     }
 }
+
