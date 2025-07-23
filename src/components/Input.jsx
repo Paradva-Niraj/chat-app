@@ -108,7 +108,7 @@ function Input({ selectFrd }) {
                     </div>
                 }
                 <div className='chat'>
-                    {/* <div className='chats'> */}
+                    <div className='chats'>
                     {chat
                         .filter(msg => 
                             (msg.from === selectFrd?._id && msg.to === user?.id) || 
@@ -119,7 +119,7 @@ function Input({ selectFrd }) {
                                 {msg.text}
                             </div>
                         ))}
-                        {/* </div> */}
+                        </div>
                 </div>
             </div>
             <div className="input-box">
